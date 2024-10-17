@@ -1,0 +1,31 @@
+import arcpy
+import os;
+
+#This python code dissolves all the shapefiles from a folder and saves in different folder. Only can be used
+#with arcpy (with a license of ArcMap or ArcGIS Pro). Useable with Python 3.6 (ArcGIS Pro). If you want to use
+#with Python 2.7 (ArcMap) please erase the brackets of 'print' and change 'arcpy.management.Dissolve(...) with
+#'arcpy.Dissolve_arc(shp_elements, os.path.join(out_workspace,shp_lists), dissolveItem="FID")
+
+#Workspace where the shapefiles are:
+arcpy.env.workspace = r"C:\Users\Beñat\OneDrive\Documentos\ArcGIS\Packages\Occsol_Landsat2010_bbcb61\commondata\occsol2010_merge";
+workspace = r"C:\Users\Beñat\OneDrive\Documentos\ArcGIS\Packages\Occsol_Landsat2010_bbcb61\commondata\occsol2010_merge"
+arcpy.env.overwriteOutput = True;
+
+#Output workspace (folder):
+out_workspace = r"E:\BC3\Senegal\Senegal_landcover_2010"
+
+#Function that lists all the vector data in the parent forlder:
+shapefiles = arcpy.ListFeatureClasses ()
+
+#Array to save all the absolute paths of the shapefiles:
+shape_array = [];
+
+#Add the absolute paths to 'shape_array':
+for shapes in shapefiles:
+    shape_array.append(os.path.join(workspace,shapes))
+
+for shp_elements, shp_lists in zip(shape_array, shapefiles):
+    #print(shp_elements);
+    #print(os.path.join(out_workspace,shp_lists))
+    arcpy.management.Dissolve(shp_elements, os.path.join(out_workspace,shp_lists), dissolve_field="FID", multi_part="MULTI_PART")
+    print("Disolve hecho")
